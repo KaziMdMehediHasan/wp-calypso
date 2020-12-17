@@ -101,6 +101,7 @@ interface State {
 	postUrl?: T.URL;
 	previewUrl: T.URL;
 	cartData?: RequestCart;
+	checkoutOnSuccessCallback?: () => void;
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
@@ -145,6 +146,7 @@ class CalypsoifyIframe extends Component<
 		previewUrl: 'about:blank',
 		currentIFrameUrl: '',
 		cartData: {},
+		checkoutOnSuccessCallback: undefined,
 	};
 
 	iframeRef: React.RefObject< HTMLIFrameElement > = React.createRef();
@@ -293,8 +295,8 @@ class CalypsoifyIframe extends Component<
 		}
 
 		if ( EditorActions.OpenCheckoutModal === action ) {
-			const { cartData, checkoutOnSuccessCallback } = payload;
-			this.setState( { isCheckoutModalVisible: true, cartData: payload } );
+			const { checkoutOnSuccessCallback, ...cartData } = payload;
+			this.setState( { isCheckoutModalVisible: true, checkoutOnSuccessCallback, cartData } );
 		}
 
 		if ( EditorActions.GetCheckoutModalStatus === action ) {
@@ -707,6 +709,7 @@ class CalypsoifyIframe extends Component<
 			editedPost,
 			currentIFrameUrl,
 			cartData,
+			checkoutOnSuccessCallback,
 		} = this.state;
 
 		const isUsingClassicBlock = !! classicBlockEditorId;
@@ -750,6 +753,7 @@ class CalypsoifyIframe extends Component<
 				/>
 				{ isCheckoutOverlayEnabled && (
 					<AsyncLoad
+						checkoutOnSuccessCallback={ checkoutOnSuccessCallback }
 						require="calypso/blocks/editor-checkout-modal"
 						onClose={ this.closeCheckoutModal }
 						cartData={ cartData }
