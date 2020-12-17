@@ -963,6 +963,7 @@ async function preselectParentPage() {
 
 function handleCheckoutModal( calypsoPort ) {
 	const { port1, port2 } = new MessageChannel();
+	const { checkoutPort1, checkoutPort2 } = new MessageChannel();
 	calypsoPort.postMessage(
 		{
 			action: 'getCheckoutModalStatus',
@@ -970,6 +971,7 @@ function handleCheckoutModal( calypsoPort ) {
 		},
 		[ port2 ]
 	);
+	let callback;
 	port1.onmessage = ( message ) => {
 		const { isCheckoutOverlayEnabled } = message.data;
 
@@ -979,13 +981,20 @@ function handleCheckoutModal( calypsoPort ) {
 				'a8c.wpcom-block-editor.openCheckoutModal',
 				'a8c/wpcom-block-editor/openCheckoutModal',
 				( data ) => {
+					//callback = data.checkoutOnSuccessCallback;
 					calypsoPort.postMessage( {
 						action: 'openCheckoutModal',
 						payload: data,
+						ports: [ checkoutPort2 ],
 					} );
 				}
 			);
 		}
+	};
+
+	checkoutPort1.onmessage = ( message ) => {
+		//callback?.();
+		console.log( 'checkout finished' );
 	};
 }
 
