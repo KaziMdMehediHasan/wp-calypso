@@ -567,6 +567,8 @@ const Summary: React.FunctionComponent = () => {
 		launchSite( siteId );
 		if ( selectedDomain || ! isSelectedPlanFree ) {
 			goToCheckout();
+		} else {
+			launchSite( siteId );
 		}
 	};
 
