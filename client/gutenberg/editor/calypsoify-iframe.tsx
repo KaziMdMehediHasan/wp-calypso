@@ -144,7 +144,7 @@ class CalypsoifyIframe extends Component<
 		isPreviewVisible: false,
 		previewUrl: 'about:blank',
 		currentIFrameUrl: '',
-		cartData: {},
+		cartData: undefined,
 	};
 
 	iframeRef: React.RefObject< HTMLIFrameElement > = React.createRef();
@@ -166,7 +166,7 @@ class CalypsoifyIframe extends Component<
 		// a 3rd party cookie auth issue fix in place https://github.com/Automattic/jetpack/pull/16167
 		this.waitForIframeToInit = setInterval( () => {
 			if ( this.props.shouldLoadIframe ) {
-				clearInterval( this.waitForIframeToInit );
+				clearInterval( ( this.waitForIframeToInit as unknown ) as number );
 				this.waitForIframeToLoad = setTimeout( () => {
 					isDesktop
 						? this.props.notifyDesktopCannotOpenEditor(
@@ -707,6 +707,8 @@ class CalypsoifyIframe extends Component<
 			this.checkoutPort.close();
 
 			this.checkoutPort = null;
+
+			this.setState( { isCheckoutModalVisible: false } );
 		}
 	};
 

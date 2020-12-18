@@ -34,7 +34,13 @@ export const getCurrentLaunchFlowUrl = (): string | undefined => {
 	}
 };
 
-export const openCheckout = ( siteSlug: string, isEcommerce = false ): void => {
+export const openCheckout = (
+	siteSlug: string,
+	isEcommerce = false,
+	onSuccessCallback = () => {
+		return;
+	}
+): void => {
 	const HOOK_OPEN_CHECKOUT_MODAL = 'a8c.wpcom-block-editor.openCheckoutModal';
 	const isFocusedLaunchFlow = window?.wpcomEditorSiteLaunch?.launchFlow === FOCUSED_LAUNCH_FLOW;
 
@@ -42,7 +48,7 @@ export const openCheckout = ( siteSlug: string, isEcommerce = false ): void => {
 	if ( hasAction( HOOK_OPEN_CHECKOUT_MODAL ) && isFocusedLaunchFlow ) {
 		doAction( HOOK_OPEN_CHECKOUT_MODAL, {
 			checkoutOnSuccessCallback: () => {
-				console.log( 'TODO: close the modal AND launch the site' );
+				onSuccessCallback();
 			},
 		} );
 		return;
