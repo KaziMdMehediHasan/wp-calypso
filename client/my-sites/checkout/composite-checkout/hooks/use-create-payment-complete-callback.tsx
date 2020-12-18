@@ -193,6 +193,9 @@ export default function useCreatePaymentCompleteCallback( {
 
 			debug( 'just redirecting to', url );
 
+			// @TODO: replace this short circuit with a proper way to prevent redirect in case of Checkout Modal over Launch
+			return;
+
 			if ( createUserAndSiteBeforeTransaction ) {
 				try {
 					window.localStorage.removeItem( 'shoppingCart' );
