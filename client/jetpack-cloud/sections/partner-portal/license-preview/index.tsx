@@ -40,13 +40,13 @@ interface Props {
 
 export default function LicensePreview( {
 	licenseKey,
-	siteUrl,
 	product,
+	username,
+	blogId,
+	siteUrl,
 	issuedAt,
 	attachedAt,
 	revokedAt,
-	username,
-	blogId,
 }: Props ): ReactElement {
 	const translate = useTranslate();
 	const [ isOpen, setOpen ] = useState( false );
