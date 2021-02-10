@@ -606,6 +606,14 @@ export default function CompositeCheckout( {
 		isFocusedLaunch,
 	} );
 
+	const handlePaymentComplete = useCallback(
+		( args: PaymentCompleteCallbackArguments ) => {
+			onPaymentComplete?.( args );
+			onAfterPaymentComplete?.();
+		},
+		[ onPaymentComplete, onAfterPaymentComplete ]
+	);
+
 	if (
 		shouldShowEmptyCartPage( {
 			responseCart,
@@ -643,11 +651,6 @@ export default function CompositeCheckout( {
 			</React.Fragment>
 		);
 	}
-
-	const handlePaymentComplete = ( args: PaymentCompleteCallbackArguments ) => {
-		onPaymentComplete?.( args );
-		onAfterPaymentComplete?.();
-	};
 
 	return (
 		<React.Fragment>
