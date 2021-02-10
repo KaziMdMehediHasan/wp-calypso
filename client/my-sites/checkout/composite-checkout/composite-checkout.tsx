@@ -140,6 +140,7 @@ export default function CompositeCheckout( {
 	infoMessage,
 	isInEditor,
 	onAfterPaymentComplete,
+	isFocusedLaunch,
 }: {
 	siteSlug: string | undefined;
 	siteId: number | undefined;
@@ -157,6 +158,7 @@ export default function CompositeCheckout( {
 	isInEditor?: boolean;
 	infoMessage?: JSX.Element;
 	onAfterPaymentComplete?: () => void;
+	isFocusedLaunch?: boolean;
 } ): JSX.Element {
 	const translate = useTranslate();
 	const isJetpackNotAtomic =
@@ -601,6 +603,7 @@ export default function CompositeCheckout( {
 		feature,
 		isInEditor,
 		isComingFromUpsell,
+		isFocusedLaunch,
 	} );
 
 	if (

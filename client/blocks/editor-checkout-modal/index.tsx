@@ -94,6 +94,7 @@ const EditorCheckoutModal: React.FunctionComponent< Props > = ( props ) => {
 				>
 					<CompositeCheckout
 						isInEditor
+						isFocusedLaunch={ ! cartData?.products } // we currently know we're not passing cartData from Focused Launch
 						siteId={ site?.ID }
 						siteSlug={ site?.slug }
 						productAliasFromUrl={ commaSeparatedProductSlugs }
