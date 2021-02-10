@@ -963,22 +963,21 @@ async function preselectParentPage() {
 
 function handleCheckoutModalOpened( calypsoPort, data ) {
 	const { port1, port2 } = new MessageChannel();
-	const onCheckoutSuccessCallback = data.checkoutOnSuccessCallback;
 
-	// Deleting the checkoutOnSuccessCallback as otherwise
+	// Remove checkoutOnSuccessCallback from data to prevent
 	// the `data` object could not be cloned in postMessage()
-	delete data.checkoutOnSuccessCallback;
+	const { checkoutOnSuccessCallback, ...cartData } = data;
 
 	calypsoPort.postMessage(
 		{
 			action: 'openCheckoutModal',
-			payload: data,
+			payload: cartData,
 		},
 		[ port2 ]
 	);
 
 	port1.onmessage = () => {
-		onCheckoutSuccessCallback?.();
+		checkoutOnSuccessCallback?.();
 		// this is a once-only port
 		// to send more messages we have to re-open the
 		// modal and create a new channel
