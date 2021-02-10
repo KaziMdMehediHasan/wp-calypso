@@ -545,7 +545,7 @@ const Summary: React.FunctionComponent = () => {
 
 	const { siteId, redirectTo } = React.useContext( LaunchContext );
 
-	const { goToCheckout } = useCart();
+	const { goToCheckoutAndLaunch } = useCart();
 
 	// When the summary view is active, the modal should be dismissible, and
 	// the modal title should be visible
@@ -564,10 +564,12 @@ const Summary: React.FunctionComponent = () => {
 	}, [ title, showSiteTitleStep, isSiteTitleStepVisible ] );
 
 	const handleLaunch = () => {
+		// Launch the site directly if Free plan and subdomain are selected.
+		// Otherwise, show checkout as the next step.
 		if ( ! selectedDomain && isSelectedPlanFree ) {
 			launchSite( siteId );
 		} else {
-			goToCheckout();
+			goToCheckoutAndLaunch();
 		}
 	};
 
