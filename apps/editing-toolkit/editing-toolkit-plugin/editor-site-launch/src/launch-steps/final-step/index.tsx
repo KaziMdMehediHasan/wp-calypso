@@ -82,10 +82,11 @@ const FinalStep: React.FunctionComponent< LaunchStepProps > = ( { onNextStep, on
 							<br />
 							<span className="nux-launch__summary-item__domain-price">
 								{ __( 'Domain Registration', 'full-site-editing' ) }:{ ' ' }
-								{
-									/* translators: %s is the price with currency. Eg: $15/year. */
-									sprintf( __( '%s/year', 'full-site-editing' ), domain.cost )
-								}
+								{ sprintf(
+									// translators: %s is the price with currency. Eg: $15/year
+									__( '%s/year', 'full-site-editing' ),
+									domain.cost
+								) }
 							</span>
 						</>
 					) }
@@ -126,6 +127,9 @@ const FinalStep: React.FunctionComponent< LaunchStepProps > = ( { onNextStep, on
 		</div>
 	);
 
+	const planSummaryCostLabelAnnually = __( 'billed annually', 'full-site-editing' );
+	const planSummaryCostLabelMonthly = __( 'per month, billed monthly', 'full-site-editing' );
+
 	const planSummary = (
 		<div className="nux-launch__summary-item">
 			{ plan && planProduct && ! plan.isFree ? (
@@ -133,8 +137,8 @@ const FinalStep: React.FunctionComponent< LaunchStepProps > = ( { onNextStep, on
 					<p className="nux-launch__summary-item__plan-name">WordPress.com { plan.title }</p>
 					{ __( 'Plan subscription', 'full-site-editing' ) }: { planProduct.price }{ ' ' }
 					{ planProduct.billingPeriod === 'ANNUALLY'
-						? __( 'billed annually', 'full-site-editing' )
-						: __( 'per month, billed monthly', 'full-site-editing' ) }
+						? planSummaryCostLabelAnnually
+						: planSummaryCostLabelMonthly }
 				</>
 			) : (
 				<>

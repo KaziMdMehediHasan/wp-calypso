@@ -104,7 +104,7 @@ const wpcom = wp.undocumented();
 const wpcomGetStoredCards = (): StoredCard[] => wpcom.getStoredCards();
 
 // Can be safely removed after 2021-02-14 when the FRESHPACK coupon expires
-import { abtest } from 'calypso/lib/abtest';
+import moment from 'moment';
 import { isJetpackProductSlug, isJetpackPlanSlug } from 'calypso/lib/products-values';
 const useMaybeGetFRESHPACKCode = ( products: RequestCartProduct[] ) =>
 	useMemo( () => {
@@ -118,8 +118,9 @@ const useMaybeGetFRESHPACKCode = ( products: RequestCartProduct[] ) =>
 			return undefined;
 		}
 
-		const shouldPrefillCode = abtest( 'prefillFRESHPACKCouponCode' ) === 'test';
-		return shouldPrefillCode ? 'FRESHPACK' : undefined;
+		const endDate = moment.utc( '2021-02-15' );
+
+		return moment().isBefore( endDate ) ? 'FRESHPACK' : undefined;
 	}, [ products ] );
 
 export default function CompositeCheckout( {
@@ -421,7 +422,7 @@ export default function CompositeCheckout( {
 	} );
 
 	const { analyticsPath, analyticsProps } = getAnalyticsPath(
-		String( purchaseId ),
+		purchaseId,
 		productAliasFromUrl,
 		siteSlug,
 		feature,
@@ -677,8 +678,6 @@ export default function CompositeCheckout( {
 					getItemVariants={ getItemVariants }
 					responseCart={ responseCart }
 					addItemToCart={ addItemWithEssentialProperties }
-					subtotal={ subtotal }
-					credits={ credits }
 					isCartPendingUpdate={ isCartPendingUpdate }
 					showErrorMessageBriefly={ showErrorMessageBriefly }
 					isLoggedOutCart={ isLoggedOutCart }
@@ -699,7 +698,7 @@ function getPlanProductSlugs( items: ResponseCartProduct[] ): string[] {
 }
 
 function getAnalyticsPath(
-	purchaseId: string | undefined,
+	purchaseId: number | undefined,
 	product: string | undefined,
 	selectedSiteSlug: string | undefined,
 	selectedFeature: string | undefined,

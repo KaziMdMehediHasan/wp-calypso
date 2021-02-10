@@ -60,6 +60,7 @@
 		"gutenboarding/new-launch-mobile": true,
 		"happychat": true,
 		"help": true,
+		"home/layout-dev": true,
 		"inline-help": true,
 		"i18n/translation-scanner": true,
 		"ive/use-external-assignment": true,
@@ -186,7 +187,6 @@
 		"woocommerce/extension-wcservices": true,
 		"woocommerce/extension-wcservices/international-labels": true,
 		"woocommerce/onboarding-oauth": true,
-		"woocommerce/store-deprecated": true,
 		"woocommerce/store-removed": false,
 		"woocommerce/store-on-non-atomic-sites": true,
 		"wpcom-user-bootstrap": true
