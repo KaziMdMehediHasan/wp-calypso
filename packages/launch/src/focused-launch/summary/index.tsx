@@ -529,8 +529,9 @@ const Summary: React.FunctionComponent = () => {
 		return [ launchStore.hasSelectedDomain(), isSiteTitleStepVisible, domain, planProductId ];
 	} );
 
-	const isSelectedPlanFree = useSelect(
-		( select ) => select( PLANS_STORE ).isPlanProductFree( selectedPlanProductId ),
+	const isSelectedPlanPaid = useSelect(
+		( select ) =>
+			selectedPlanProductId && ! select( PLANS_STORE ).isPlanProductFree( selectedPlanProductId ),
 		[ selectedPlanProductId ]
 	);
 
@@ -545,7 +546,7 @@ const Summary: React.FunctionComponent = () => {
 	const { siteSubdomain, hasPaidDomain } = useSiteDomains();
 	const { onDomainSelect, onExistingSubdomainSelect, currentDomain } = useDomainSelection();
 	const { domainSearch, isLoading } = useDomainSearch();
-	const { isPaidPlan: hasPaidPlan } = useSite();
+	const { hasPaidPlan } = useSite();
 
 	const { goToCheckoutAndLaunch, isCartUpdating } = useCart();
 
@@ -573,7 +574,7 @@ const Summary: React.FunctionComponent = () => {
 	const handleLaunch = () => {
 		// Launch the site directly if Free plan and subdomain are selected.
 		// Otherwise, show checkout as the next step.
-		if ( ! selectedDomain && isSelectedPlanFree ) {
+		if ( ! selectedDomain && ! isSelectedPlanPaid ) {
 			launchSite( siteId );
 		} else {
 			goToCheckoutAndLaunch();
