@@ -35,11 +35,9 @@ export const getCurrentLaunchFlowUrl = (): string | undefined => {
 };
 
 export const openCheckout = (
-	siteSlug: string,
+	siteSlug: string = window?.currentSiteId?.toString() || '',
 	isEcommerce = false,
-	onSuccessCallback = () => {
-		return;
-	}
+	onSuccessCallback?: () => void
 ): void => {
 	const HOOK_OPEN_CHECKOUT_MODAL = 'a8c.wpcom-block-editor.openCheckoutModal';
 	const isFocusedLaunchFlow = window?.wpcomEditorSiteLaunch?.launchFlow === FOCUSED_LAUNCH_FLOW;
@@ -47,9 +45,7 @@ export const openCheckout = (
 	// only in focused launch, open checkout modal assuming the cart is already updated
 	if ( hasAction( HOOK_OPEN_CHECKOUT_MODAL ) && isFocusedLaunchFlow ) {
 		doAction( HOOK_OPEN_CHECKOUT_MODAL, {
-			checkoutOnSuccessCallback: () => {
-				onSuccessCallback();
-			},
+			checkoutOnSuccessCallback: onSuccessCallback,
 		} );
 		return;
 	}
