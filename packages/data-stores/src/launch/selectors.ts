@@ -27,17 +27,6 @@ export const getSelectedDomain = ( state: State ): DomainSuggestions.DomainSugge
 	state.domain;
 export const getSelectedPlanProductId = ( state: State ): number | undefined => state.planProductId;
 
-/**
- * Returns the product id of the the last paid plan the user had picked.
- * If they revert to a free plan,
- * this is useful if you want to recommend their once-picked paid plan
- *
- * @param state State
- */
-export const getPaidPlanProductId = ( state: State ): number | undefined => {
-	return state.paidPlanProductId;
-};
-
 // Check if a domain has been explicitly selected (including free subdomain)
 
 /**
