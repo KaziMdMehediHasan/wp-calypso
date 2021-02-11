@@ -6,3 +6,48 @@
 		color: var( --color-neutral-90 );
 	}
 }
+
+.titan-management-nav__foldable-card {
+	margin-bottom: 0;
+
+	.foldable-card__header {
+		.gridicons-my-sites {
+			fill: var( --color-wordpress-com );
+			margin-left: -2px;
+			margin-right: 7px;
+		}
+
+		.titan-management-nav__foldable-card-main-text {
+			display: flex;
+			flex-direction: column;
+
+			em {
+				color: var(--color-neutral-50);
+				font-style: normal;
+			}
+		}
+	}
+
+	.titan-management-nav__foldable-card-services {
+		display: flex;
+		list-style: none;
+		margin: 0;
+
+		a {
+			align-items: center;
+			display: flex;
+			flex-direction: column;
+			padding: 10px;
+			text-align: center;
+
+			&:hover {
+				background-color: #eee;
+				border-radius: 5px;
+			}
+
+			img {
+				max-width: 60px;
+			}
+		}
+	}
+}

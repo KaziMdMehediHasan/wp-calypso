@@ -18,15 +18,19 @@ import {
 	recordTracksEvent,
 } from 'calypso/state/analytics/actions';
 import { emailManagementAddGSuiteUsers } from 'calypso/my-sites/email/paths';
-import { hasPendingGSuiteUsers } from 'calypso/lib/gsuite';
+import FoldableCard from 'calypso/components/foldable-card';
+import { getGoogleAdminUrl, getGmailUrl, getGoogleCalendarUrl, hasPendingGSuiteUsers } from 'calypso/lib/gsuite';
 import { getCurrentUser } from 'calypso/state/current-user/selectors';
 import { getSelectedDomain } from 'calypso/lib/domains';
 import { getSelectedSiteSlug } from 'calypso/state/ui/selectors';
+import gmailIcon from 'calypso/assets/images/email-providers/google-workspace/services/gmail.svg';
+import googleAdminIcon from 'calypso/assets/images/email-providers/google-workspace/services/admin.svg';
+import googleCalendarIcon from 'calypso/assets/images/email-providers/google-workspace/services/calendar.svg';
+import googleWorkspaceIcon from 'calypso/assets/images/email-providers/google-workspace/icon.svg';
 import GSuiteUserItem from 'calypso/my-sites/email/email-management/gsuite-user-item';
 import { isEnabled } from '@automattic/calypso-config';
 import Notice from 'calypso/components/notice';
 import PendingGSuiteTosNotice from 'calypso/my-sites/domains/components/domain-warnings/pending-gsuite-tos-notice';
-import SectionHeader from 'calypso/components/section-header';
 import TitanControlPanelLoginCard from 'calypso/my-sites/email/email-management/titan-control-panel-login-card';
 import TitanManagementNav from 'calypso/my-sites/email/email-management/titan-management-nav';
 import { withLocalizedMoment } from 'calypso/components/localized-moment';
@@ -62,27 +66,48 @@ class GSuiteUsersCard extends React.Component {
 	};
 
 	renderDomainWithGSuite( domainName, users ) {
+		const { selectedSiteSlug, translate } = this.props;
+
 		// The product name is same for all users as product license is associated to domain
 		// Hence a snapshot of the product name from the first user is sufficient
 		const productName = users[ 0 ].product_name;
 
-		// Shows at least the domain name if the list of G Suite users has not been retrieved from the API yet
-		const label = productName ? `${ productName }: ${ domainName }` : domainName;
+		const header = (
+			<>
+				<img src={ googleWorkspaceIcon } alt={ translate( 'Google Workspace icon' ) } />
+
+				<span className="gsuite-users-card__foldable-card-main-text">
+					<strong>{ productName }</strong>
+					<em>{ domainName }</em>
+				</span>
+			</>
+		);
+
+		const summary = this.canAddUsers( domainName ) && (
+			<Button
+				primary
+				compact
+				href={ emailManagementAddGSuiteUsers( selectedSiteSlug, domainName ) }
+				onClick={ this.goToAddGoogleApps }
+			>
+				{ translate( 'Add New Users' ) }
+			</Button>
+		);
 
 		return (
-			<div key={ `google-apps-user-${ domainName }` } className="gsuite-users-card__container">
-				<SectionHeader label={ label }>
-					{ this.canAddUsers( domainName ) && (
-						<Button
-							primary
-							compact
-							href={ emailManagementAddGSuiteUsers( this.props.selectedSiteSlug, domainName ) }
-							onClick={ this.goToAddGoogleApps }
-						>
-							{ this.props.translate( 'Add New Users' ) }
-						</Button>
-					) }
-				</SectionHeader>
+			<div key={ `google-apps-user-${ domainName }` }>
+				<FoldableCard
+					className="gsuite-users-card__foldable-card"
+					header={ header }
+					summary={ summary }
+					expandedSummary={ summary }
+				>
+					<ul className="gsuite-users-card__foldable-card-services">
+						<li><a href={ getGmailUrl( domainName ) } target="_blank" rel="noreferrer noopener"><img src={ gmailIcon } alt={ translate( 'Gmail icon' ) } /><strong>Gmail</strong></a></li>
+						<li><a href={ getGoogleAdminUrl( domainName ) } target="_blank" rel="noreferrer noopener"><img src={ googleAdminIcon } alt={ translate( 'Google Admin icon' ) } /><strong>Admin</strong></a></li>
+						<li><a href={ getGoogleCalendarUrl( domainName ) } target="_blank" rel="noreferrer noopener"><img src={ googleCalendarIcon } alt={ translate( 'Google Calendar icon' ) } /><strong>Calendar</strong></a></li>
+					</ul>
+				</FoldableCard>
 
 				<CompactCard className="gsuite-users-card__user-list">
 					<ul className="gsuite-users-card__user-list-inner">
@@ -96,9 +121,11 @@ class GSuiteUsersCard extends React.Component {
 	renderDomain( domain, users ) {
 		if ( hasTitanMailWithUs( domain ) ) {
 			const domainKey = `titan-${ domain.name }`;
+
 			if ( isEnabled( 'titan/phase-2' ) ) {
 				return <TitanManagementNav domain={ domain } key={ domainKey } />;
 			}
+
 			return <TitanControlPanelLoginCard domain={ domain } key={ domainKey } />;
 		}
 
@@ -155,7 +182,7 @@ class GSuiteUsersCard extends React.Component {
 		const usersByDomain = groupBy( gsuiteUsers, 'domain' );
 
 		return (
-			<div>
+			<div className="gsuite-users-card">
 				{ pendingDomains.length !== 0 && (
 					<PendingGSuiteTosNotice
 						key="pending-gsuite-tos-notice"

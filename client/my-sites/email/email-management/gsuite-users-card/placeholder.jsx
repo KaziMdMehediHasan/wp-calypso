@@ -16,7 +16,7 @@ import GSuiteUserItem from 'calypso/my-sites/email/email-management/gsuite-user-
 import './style.scss';
 
 const Placeholder = () => (
-	<div className="gsuite-users-card__container is-placeholder">
+	<div className="is-placeholder">
 		<SectionHeader />
 
 		<CompactCard className="gsuite-users-card__user-list">
