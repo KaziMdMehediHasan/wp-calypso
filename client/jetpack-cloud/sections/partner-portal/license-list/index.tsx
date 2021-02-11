@@ -7,11 +7,10 @@ import { useTranslate } from 'i18n-calypso';
 /**
  * Internal dependencies
  */
-import Main from 'calypso/components/main';
-import CardHeading from 'calypso/components/card-heading';
-import DocumentHead from 'calypso/components/data/document-head';
 import LicenseListItem from 'calypso/jetpack-cloud/sections/partner-portal/license-list-item';
-import LicensePreview from 'calypso/jetpack-cloud/sections/partner-portal/license-preview';
+import LicensePreview, {
+	LicensePreviewPlaceholder,
+} from 'calypso/jetpack-cloud/sections/partner-portal/license-preview';
 
 export default function LicenseList() {
 	const translate = useTranslate();
@@ -60,11 +59,7 @@ export default function LicenseList() {
 	];
 
 	return (
-		<Main wideLayout={ true } className="license-list">
-			<DocumentHead title={ translate( 'Licenses' ) } />
-
-			<CardHeading size={ 36 }>{ translate( 'Licenses' ) }</CardHeading>
-
+		<div className="license-list">
 			<LicenseListItem header>
 				<h2>{ translate( 'License state' ) }</h2>
 				<h2>{ translate( 'Issued on' ) }</h2>
@@ -87,6 +82,10 @@ export default function LicenseList() {
 					revokedAt={ license.revokedAt }
 				/>
 			) ) }
-		</Main>
+
+			<LicensePreviewPlaceholder />
+			<LicensePreviewPlaceholder />
+			<LicensePreviewPlaceholder />
+		</div>
 	);
 }
