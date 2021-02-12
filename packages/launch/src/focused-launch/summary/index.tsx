@@ -527,12 +527,11 @@ const Summary: React.FunctionComponent = () => {
 		const { isSiteTitleStepVisible, domain, planProductId } = launchStore.getState();
 
 		return [ launchStore.hasSelectedDomain(), isSiteTitleStepVisible, domain, planProductId ];
-	} );
+	}, [] );
 
 	const isSelectedPlanPaid = useSelect(
-		( select ) =>
-			selectedPlanProductId && ! select( PLANS_STORE ).isPlanProductFree( selectedPlanProductId ),
-		[ selectedPlanProductId ]
+		( select ) => !! select( LAUNCH_STORE ).getPaidPlanProductId(),
+		[]
 	);
 
 	const { launchSite } = useDispatch( SITE_STORE );
@@ -542,6 +541,7 @@ const Summary: React.FunctionComponent = () => {
 		showModalTitle,
 		showSiteTitleStep,
 	} = useDispatch( LAUNCH_STORE );
+
 	const { title, updateTitle } = useTitle();
 	const { siteSubdomain, hasPaidDomain } = useSiteDomains();
 	const { onDomainSelect, onExistingSubdomainSelect, currentDomain } = useDomainSelection();
