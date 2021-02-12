@@ -57,7 +57,7 @@ export function fetchLicenses( action: HttpAction ): AnyAction {
 			apiNamespace: 'wpcom/v2',
 			path: '/jetpack-licensing/licenses',
 			options: {
-				authToken: action.authToken,
+				fetcher: action.fetcher,
 			},
 		},
 		action

@@ -11,29 +11,23 @@ import {
 	JETPACK_PARTNER_PORTAL_LICENSES_RECEIVE,
 } from 'calypso/state/action-types';
 import { ReduxDispatch } from 'calypso/state/redux-store';
-import { HttpAction, License, PartnerPortalStore } from 'calypso/state/partner-portal';
-import { getActivePartnerKey } from 'calypso/state/partner-portal/partner/selectors';
+import { HttpAction, License } from 'calypso/state/partner-portal';
 
 // Required for modular state.
 import 'calypso/state/partner-portal/init';
 
-function createRequestAction( action: AnyAction, state: PartnerPortalStore ): HttpAction {
-	const partnerKey = getActivePartnerKey( state );
-
+function createHttpAction( action: AnyAction ): HttpAction {
 	return {
 		...action,
-		authToken: partnerKey ? partnerKey.oauth2_token : '',
+		fetcher: 'wpcomJetpackLicensing',
 	};
 }
 
-export function fetchLicenses( dispatch: ReduxDispatch, getState: () => PartnerPortalStore ): void {
+export function fetchLicenses( dispatch: ReduxDispatch ): void {
 	dispatch(
-		createRequestAction(
-			{
-				type: JETPACK_PARTNER_PORTAL_LICENSES_REQUEST,
-			},
-			getState()
-		)
+		createHttpAction( {
+			type: JETPACK_PARTNER_PORTAL_LICENSES_REQUEST,
+		} )
 	);
 }
 

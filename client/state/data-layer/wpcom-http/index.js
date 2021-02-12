@@ -4,19 +4,17 @@
 
 import { compact, get } from 'lodash';
 import debugModule from 'debug';
-import wpcomXhrRequest from 'wpcom-xhr-request';
 
 /**
  * Internal dependencies
  */
-import wpcom from 'calypso/lib/wp';
+import wpcom, { wpcomJetpackLicensing } from 'calypso/lib/wp';
 import { WPCOM_HTTP_REQUEST } from 'calypso/state/action-types';
 import { extendAction } from 'calypso/state/utils';
 import {
 	processInbound as inboundProcessor,
 	processOutbound as outboundProcessor,
 } from './pipeline';
-import wpcomUndocumented from 'calypso/lib/wpcom-undocumented';
 
 const debug = debugModule( 'calypso:data-layer:wpcom-http' );
 
@@ -26,11 +24,11 @@ const debug = debugModule( 'calypso:data-layer:wpcom-http' );
  * fetcherMap :: String -> (Params -> Query -> [Body] -> Promise)
  *
  * @param {string} method name of HTTP method for request
- * @param {string|null} authToken Authorization token to use for the request.
+ * @param {string} fetcher Name of fetcher to use. Defaults to wpcom.
  * @returns {Function} the fetcher
  */
-const fetcherMap = function ( method, authToken = null ) {
-	const req = authToken ? wpcomUndocumented( authToken, wpcomXhrRequest ).req : wpcom.req;
+const fetcherMap = function ( method, fetcher = 'wpcom' ) {
+	const req = 'wpcomJetpackLicensing' === fetcher ? wpcomJetpackLicensing.req : wpcom.req;
 
 	return get(
 		{
@@ -67,7 +65,7 @@ export const queueRequest = ( processOutbound, processInbound ) => ( { dispatch 
 		query = {},
 	} = action;
 	const { responseType } = options || {};
-	const authToken = get( options, 'options.authToken', null );
+	const fetcher = get( options, 'options.fetcher', 'wpcom' );
 
 	const onStreamRecord =
 		rawOnStreamRecord &&
@@ -79,7 +77,7 @@ export const queueRequest = ( processOutbound, processInbound ) => ( { dispatch 
 
 	const request = fetcherMap(
 		method,
-		authToken
+		fetcher
 	)(
 		...compact( [
 			{ path, formData, onStreamRecord, responseType },

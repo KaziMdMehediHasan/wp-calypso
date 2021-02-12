@@ -7,7 +7,7 @@ import { AnyAction } from 'redux';
  * Utility.
  */
 interface HttpAction extends AnyAction {
-	authToken: string;
+	fetcher: string;
 }
 
 export interface PaginatedItems< T > {
